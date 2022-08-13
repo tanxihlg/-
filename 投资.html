@@ -1,0 +1,100 @@
+<head>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .frame {
+            width: 1000px;
+            height: 100px;
+            margin: 0 auto;
+            background-color: #ccc;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .frame ul {
+            height: 50%;
+            width: 100%;
+            display: flex;
+        }
+
+        .frame ul li {
+            width: 20%;
+            height: 100%;
+            text-align: center;
+            line-height: 50px;
+            color: white;
+            border: 1px solid white;
+            font-size: 17px;
+        }
+
+        ul li input {
+            width: 80%;
+            height: 60%;
+            background-color: #ccc;
+            border: none;
+            outline: none;
+            text-align: center;
+            color: white;
+            font-size: 17px;
+        }
+
+        ul li button {
+            width: 100%;
+            height: 100%;
+            background-color: #ccc;
+            border: none;
+            text-align: center;
+            color: white;
+            font-size: 17px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="frame">
+        <ul>
+            <li type="none">买入价</li>
+            <li type="none">买入时间</li>
+            <li type="none">卖出价</li>
+            <li type="none">卖出时间</li>
+            <li type="none">年化收益率</li>
+        </ul>
+        <ul>
+            <li type="none"><input type="text" id="buyprice" oninput=""></li>
+            <li type="none"><input type="date" id="buytime" value="2022-05-13"></li>
+            <li type="none"><input type="text" id="sellprice"></li>
+            <li type="none"><input type="date" id="selltime" value="2022-08-13"></li>
+            <li type="none"><button>确定</button></li>
+        </ul>
+    </div>
+    <script>
+        var _buyprice = document.getElementById("buyprice")
+        var _buytime = document.getElementById('buytime')
+        var _sellprice = document.getElementById('sellprice')
+        var _selltime = document.getElementById('selltime')
+        var _sure = document.querySelector('button')
+        _sure.onclick = function () {
+            var rate=_sure.parentNode
+            rate.removeChild(_sure)
+            rate.innerHTML = stock(_buyprice.value, _buytime.value, _sellprice.value, _selltime.value)
+            if (rate.innerHTML == null) { rate.innerHTML = '' }
+            else if (rate.innerHTML < -0.2) {
+                rate.style.color = 'red'
+            }
+            else if (rate.innerHTML > 0.3) {
+                rate.style.color = 'green'
+            }
+        }
+        function stock(buyprice, buytime, sellprice, selltime) {
+            var nbuytime = new Date(buytime)
+            var nselltime = new Date(selltime)
+            var inteval = (nselltime.getTime() - nbuytime.getTime()) / 1000
+            var rate = Math.pow(sellprice / buyprice, 365 / Math.round(inteval / 60 / 60 / 24)) - 1
+            return Math.round(rate * 100) / 100
+        }
+    </script>
+</body>
